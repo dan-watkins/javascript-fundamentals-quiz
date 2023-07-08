@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    background-color: bisque;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.top {
+    clear: both;
+    width: 100%;
+}
+
+h1.highScores {
+    text-align: left;
+    float: left;
+    margin-left: 1rem;
+}
+
+h1.timer {
+    text-align: right;
+    float: right;
+    margin-right: 1rem;
+}
