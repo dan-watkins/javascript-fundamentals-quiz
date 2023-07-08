@@ -10,19 +10,39 @@ header {
     width: 100%;
 }
 
+/* Creating a div that will house the "View High Scores" and "Timer" elements and align them appropriately*/
 .top {
     clear: both;
     width: 100%;
 }
 
-h1.highScores {
+/* Aligning to the left of the header */
+h1.scores {
     text-align: left;
     float: left;
     margin-left: 1rem;
 }
 
+/* Aligning to the right of the header */
 h1.timer {
     text-align: right;
     float: right;
     margin-right: 1rem;
+}
+
+/* Welcome page that houses a description of the challenge and the button to start */
+.welcome {
+    text-align: center;
+    align-items: center;
+    padding: 1rem;
+    line-height: 1.5rem;
+}
+
+/* Creating some space between the header and the paragraph */
+h2 {
+    padding: 1rem;
+}
+
+#quiz {
+    margin-top: 1rem;
 }
