@@ -1,3 +1,20 @@
+var timeEl = document.querySelector(".timer");
+var timeLeft = 10;
+
+function setTime () {
+    var timerInterval = setInterval(function() {
+        timeLeft--;
+        timeEl.textContent = timeLeft;
+        if(timeLeft === 0) {
+            clearInterval(timerInterval);
+        }
+    }, 1000);
+}
+
+function startQuiz(event) {
+    setTime();
+}
+
 // GIVEN I am taking a code quiz
 // WHEN I click the start button
 // THEN a timer starts and I am presented with a question
