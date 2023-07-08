@@ -1,19 +1,49 @@
+var scoreEl = document.querySelector(".scores");
 var timeEl = document.querySelector(".timer");
+var questionEl = document.querySelector(".questions");
+var question1 = document.createElement("p");
+var answerList = document.createElement("ul");
+var answers = document.createElement("li");
+var questions = "What is the answer?";
+var possibleAnswers = ["A","B","C","D"];
 var timeLeft = 10;
+var timerInterval;
+// This timer is passed down to the "Start Quiz" button and decrements time by 1 second
+var countdown = function() {
+    timeLeft--;
+    timeEl.textContent = timeLeft;
+    if(timeLeft === 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
 
 function setTime () {
-    var timerInterval = setInterval(function() {
-        timeLeft--;
-        timeEl.textContent = timeLeft;
-        if(timeLeft === 0) {
-            clearInterval(timerInterval);
-        }
-    }, 1000);
+    // This avoids multiple countdowns from being run if spamming the start quiz button
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    };
+    timerInterval = setInterval(countdown, 1000);
     timeLeft = 10;
+    timeEl.textContent = timeLeft;
+}
+
+// Creates and displays the question and possible answers as li's of an ul.
+function showQuestions() {
+    answerList.innerHTML="";
+    questionEl.appendChild(question1);
+    question1.innerText=questions;
+    question1.appendChild(answerList);
+    for (let i = 0; i < possibleAnswers.length; i++) {
+        var newAnswer = document.createElement("li")
+        answerList.appendChild(newAnswer);
+        newAnswer.innerText = possibleAnswers[i];
+    }
 }
 
 function startQuiz(event) {
     setTime();
+    showQuestions();
 }
 
 // GIVEN I am taking a code quiz
