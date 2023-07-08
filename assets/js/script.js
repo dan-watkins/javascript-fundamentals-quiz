@@ -9,6 +9,7 @@ function setTime () {
             clearInterval(timerInterval);
         }
     }, 1000);
+    timeLeft = 10;
 }
 
 function startQuiz(event) {
