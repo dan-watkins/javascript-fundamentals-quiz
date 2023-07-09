@@ -8,6 +8,16 @@ var questions = "What is the answer?";
 var possibleAnswers = ["A","B","C","D"];
 var timeLeft = 10;
 var timerInterval;
+var f = document.createElement("form");
+f.setAttribute("method", "post");
+f.setAttribute("action", "submit");
+var i = document.createElement("input");
+i.setAttribute('type',"text");
+i.setAttribute('name',"initials");
+var s = document.createElement("input"); 
+s.setAttribute('type',"submit");
+s.setAttribute('value',"Submit");
+
 // This timer is passed down to the "Start Quiz" button and decrements time by 1 second
 var countdown = function() {
     timeLeft--;
@@ -15,6 +25,7 @@ var countdown = function() {
     if(timeLeft === 0) {
         clearInterval(timerInterval);
         timerInterval = null;
+        alert("Time's up!");
     }
 }
 
@@ -29,7 +40,7 @@ function setTime () {
 }
 
 // Creates and displays the question and possible answers as li's of an ul.
-function showQuestions() {
+function showQuestions(event) {
     answerList.innerHTML="";
     questionEl.appendChild(question1);
     question1.innerText=questions;
@@ -39,11 +50,21 @@ function showQuestions() {
         answerList.appendChild(newAnswer);
         newAnswer.innerText = possibleAnswers[i];
     }
+    saveScore(event);
+}
+
+function saveScore(event) {
+    document.getElementById("submit").appendChild(f);
+    f.appendChild(i);
+    i.onclick = i.select();
+    f.appendChild(s);
+    event.preventDefault(event);
+    localStorage.setItem("initials", i.value);
 }
 
 function startQuiz(event) {
     setTime();
-    showQuestions();
+    showQuestions(event);
 }
 
 // GIVEN I am taking a code quiz
@@ -63,3 +84,4 @@ function startQuiz(event) {
 // THEN I can save my initials and my score
 
 document.getElementById("quiz").addEventListener("click", startQuiz);
+document.getElementById("submit").addEventListener("click", saveScore, false);
