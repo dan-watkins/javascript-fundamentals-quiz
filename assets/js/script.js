@@ -26,6 +26,7 @@ var countdown = function() {
         clearInterval(timerInterval);
         timerInterval = null;
         alert("Time's up!");
+        saveScore(event);
     }
 }
 
@@ -50,15 +51,16 @@ function showQuestions(event) {
         answerList.appendChild(newAnswer);
         newAnswer.innerText = possibleAnswers[i];
     }
-    saveScore(event);
+    // saveScore(event);
 }
 
+// appends the div with a form to initial and save your score
 function saveScore(event) {
     document.getElementById("submit").appendChild(f);
     f.appendChild(i);
     i.onclick = i.select();
     f.appendChild(s);
-    event.preventDefault(event);
+    event.preventDefault(s);
     localStorage.setItem("initials", i.value);
 }
 
@@ -84,4 +86,4 @@ function startQuiz(event) {
 // THEN I can save my initials and my score
 
 document.getElementById("quiz").addEventListener("click", startQuiz);
-document.getElementById("submit").addEventListener("click", saveScore, false);
+document.getElementById("submit").addEventListener("click", saveScore);
