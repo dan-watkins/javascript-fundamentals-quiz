@@ -70,18 +70,20 @@ function setTime () {
 // updated show questions function to grab a random question and choices, then build a radio button for each possible choice
 function showQuestions(event) {
     chosenQuestion = questions[Math.floor(Math.random() * questions.length)];
-    console.log(chosenQuestion.question);
     for (var i = 0; i < questions.length; i++) {
         var question = questions[i].question;
         document.getElementById("questions").innerHTML = "<p>" + chosenQuestion.question + "</p>";
         var options = chosenQuestion.choices;
         questionEl.appendChild(document.createElement("br"));
-        var name = "radio"+i;
+        var name = "userChoices";
         for (var opt in options) {
             var radioEle = document.createElement("input");
             radioEle.type = "radio";
             radioEle.value = options[opt];
             radioEle.name = name;
+            radioEle.addEventListener("click", function () {
+                chosenAnswer = this.value;
+            })
             questionEl.appendChild(radioEle);
             var label = document.createElement("Label");
             label.innerHTML = options[opt];
@@ -89,16 +91,25 @@ function showQuestions(event) {
             questionEl.appendChild(document.createElement("br"));
         }
     }
+    var submitAnswer = document.createElement("input");
+    submitAnswer.type = "button";
+    submitAnswer.value = "Submit";
+    submitAnswer.onsubmit = checkAnswer(chosenAnswer);
+    questionEl.appendChild(submitAnswer);
+}
+
+function checkAnswer(chosenAnswer) {
+    console.log(chosenAnswer);
 }
 
 // appends the div with a form to initial and save your score
 function saveScore(event) {
     document.getElementById("submit").appendChild(f);
     f.appendChild(i);
-    i.onclick = i.select();
+    // i.onclick = i.select();
     f.appendChild(s);
-    event.preventDefault(s);
     localStorage.setItem("initials", i.value);
+    event.preventDefault();
 }
 
 function startQuiz(event) {
@@ -123,4 +134,7 @@ function startQuiz(event) {
 // THEN I can save my initials and my score
 
 document.getElementById("quiz").addEventListener("click", startQuiz);
-document.getElementById("submit").addEventListener("click", saveScore);
+document.getElementById("submit").addEventListener("click", function(event){
+    saveScore(event);
+});
+document.getElementById("questions").addEventListener("onsubmit", checkAnswer);
