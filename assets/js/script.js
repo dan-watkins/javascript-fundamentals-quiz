@@ -1,13 +1,40 @@
 var scoreEl = document.querySelector(".scores");
 var timeEl = document.querySelector(".timer");
-var questionEl = document.querySelector(".questions");
+var questionEl = document.querySelector("#questions");
 var question1 = document.createElement("p");
 var answerList = document.createElement("ul");
 var answers = document.createElement("li");
-var questions = "What is the answer?";
-var possibleAnswers = ["A","B","C","D"];
+
+var questions = [
+    {
+        question: "what is the answer to question 1?",
+        choices: ["Letter A","Letter B","Letter C","Letter D"],
+        answer: 1
+    },
+    {
+        question: "what is the answer to question 2?",
+        choices: ["Letter E","Letter F","Letter G","Letter H"],
+        answer: 2
+    },
+    {
+        question: "what is the answer to question 3?",
+        choices: ["Letter I","Letter J","Letter K","Letter L"],
+        answer: 3 
+    },
+    {
+        question: "what is the answer to question 4?",
+        choices: ["Letter M","Letter N","Letter O","Letter P"],
+        answer: 4
+    }
+]
+
+var chosenAnswer = "";
 var timeLeft = 10;
 var timerInterval;
+var winCount = 0;
+var lossCount = 0;
+
+// The below variables generate the form that is created for the submission of the score
 var f = document.createElement("form");
 f.setAttribute("method", "post");
 f.setAttribute("action", "submit");
@@ -40,18 +67,28 @@ function setTime () {
     timeEl.textContent = timeLeft;
 }
 
-// Creates and displays the question and possible answers as li's of an ul.
+// updated show questions function to grab a random question and choices, then build a radio button for each possible choice
 function showQuestions(event) {
-    answerList.innerHTML="";
-    questionEl.appendChild(question1);
-    question1.innerText=questions;
-    question1.appendChild(answerList);
-    for (let i = 0; i < possibleAnswers.length; i++) {
-        var newAnswer = document.createElement("li")
-        answerList.appendChild(newAnswer);
-        newAnswer.innerText = possibleAnswers[i];
+    chosenQuestion = questions[Math.floor(Math.random() * questions.length)];
+    console.log(chosenQuestion.question);
+    for (var i = 0; i < questions.length; i++) {
+        var question = questions[i].question;
+        document.getElementById("questions").innerHTML = "<p>" + chosenQuestion.question + "</p>";
+        var options = chosenQuestion.choices;
+        questionEl.appendChild(document.createElement("br"));
+        var name = "radio"+i;
+        for (var opt in options) {
+            var radioEle = document.createElement("input");
+            radioEle.type = "radio";
+            radioEle.value = options[opt];
+            radioEle.name = name;
+            questionEl.appendChild(radioEle);
+            var label = document.createElement("Label");
+            label.innerHTML = options[opt];
+            questionEl.appendChild(label);
+            questionEl.appendChild(document.createElement("br"));
+        }
     }
-    // saveScore(event);
 }
 
 // appends the div with a form to initial and save your score
