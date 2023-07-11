@@ -4,30 +4,30 @@ var questionEl = document.querySelector("#questions");
 var question1 = document.createElement("p");
 var answerList = document.createElement("ul");
 var answers = document.createElement("li");
-
 var questions = [
     {
         question: "what is the answer to question 1?",
-        choices: ["Letter A","Letter B","Letter C","Letter D"],
-        answer: 1
+        choices: ["A","B","C","D"],
+        answer: "A"
     },
     {
         question: "what is the answer to question 2?",
-        choices: ["Letter E","Letter F","Letter G","Letter H"],
-        answer: 2
+        choices: ["E","F","G","H"],
+        answer: "F"
     },
     {
         question: "what is the answer to question 3?",
-        choices: ["Letter I","Letter J","Letter K","Letter L"],
-        answer: 3 
+        choices: ["I","J","K","L"],
+        answer: "K"
     },
     {
         question: "what is the answer to question 4?",
-        choices: ["Letter M","Letter N","Letter O","Letter P"],
-        answer: 4
+        choices: ["M","N","O","P"],
+        answer: "P"
     }
 ]
 
+var answeredQuestions = [];
 var chosenAnswer = "";
 var timeLeft = 10;
 var timerInterval;
@@ -49,7 +49,7 @@ s.textContent = "Submit";
 var countdown = function() {
     timeLeft--;
     timeEl.textContent = timeLeft;
-    if(timeLeft === 0) {
+    if(timeLeft <= 0) {
         clearInterval(timerInterval);
         timerInterval = null;
         alert("Time's up!");
@@ -63,7 +63,7 @@ function setTime () {
         clearInterval(timerInterval);
     };
     timerInterval = setInterval(countdown, 1000);
-    timeLeft = 1;
+    timeLeft = 10;
     timeEl.textContent = timeLeft;
 }
 
@@ -97,22 +97,31 @@ function showQuestions(event) {
     submitAnswer.value = "Submit";
     questionEl.appendChild(submitAnswer);
     submitAnswer.addEventListener("click", function () {
-        checkAnswer(chosenAnswer)});
+        checkAnswer(chosenAnswer, chosenQuestion)});
     }
 
-
+// checks user anaswer against expected answer, increases score of true and subtracts time if false. then re-calls for next question.
 function checkAnswer(chosenAnswer) {
-    console.log(chosenAnswer);
+    if (chosenAnswer == chosenQuestion.answer) {
+        console.log("correct");
+        winCount++;
+    } else {
+        console.log("incorrect");
+        timeLeft--;
+        lossCount++;
+    }
+    showQuestions();
 }
 
 // appends the div with a form to initial and save your score
-function saveScore(event) {
+function saveScore() {
     // replace "inputEl" with a separate input from the global
-    f.appendChild(inputEl);
+    var textBox = document.createElement("input")
+    f.appendChild(textBox);
     // i.onclick = i.select();
     f.appendChild(s);
     document.getElementById("submit").appendChild(f);
-    localStorage.setItem("initials", inputEl.value);
+    localStorage.setItem("initials", textBox.value);
     event.preventDefault();
 }
 
