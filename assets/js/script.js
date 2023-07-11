@@ -38,12 +38,12 @@ var lossCount = 0;
 var f = document.createElement("form");
 f.setAttribute("method", "post");
 f.setAttribute("action", "submit");
-var i = document.createElement("input");
-i.setAttribute('type',"text");
-i.setAttribute('name',"initials");
-var s = document.createElement("input"); 
+var inputEl = document.createElement("input");
+inputEl.setAttribute('type',"text");
+inputEl.setAttribute('name',"initials");
+var s = document.createElement("button"); 
 s.setAttribute('type',"submit");
-s.setAttribute('value',"Submit");
+s.textContent = "Submit";
 
 // This timer is passed down to the "Start Quiz" button and decrements time by 1 second
 var countdown = function() {
@@ -63,18 +63,19 @@ function setTime () {
         clearInterval(timerInterval);
     };
     timerInterval = setInterval(countdown, 1000);
-    timeLeft = 10;
+    timeLeft = 1;
     timeEl.textContent = timeLeft;
 }
 
 // updated show questions function to grab a random question and choices, then build a radio button for each possible choice
 function showQuestions(event) {
-    chosenQuestion = questions[Math.floor(Math.random() * questions.length)];
+// potentially replace with while loop
     for (var i = 0; i < questions.length; i++) {
-        var question = questions[i].question;
+        chosenQuestion = questions[Math.floor(Math.random() * questions.length)];
         document.getElementById("questions").innerHTML = "<p>" + chosenQuestion.question + "</p>";
         var options = chosenQuestion.choices;
         questionEl.appendChild(document.createElement("br"));
+        // replace this with a class instead of a name attribute on the buttons for targeting later
         var name = "userChoices";
         for (var opt in options) {
             var radioEle = document.createElement("input");
@@ -94,9 +95,11 @@ function showQuestions(event) {
     var submitAnswer = document.createElement("input");
     submitAnswer.type = "button";
     submitAnswer.value = "Submit";
-    submitAnswer.onsubmit = checkAnswer(chosenAnswer);
     questionEl.appendChild(submitAnswer);
-}
+    submitAnswer.addEventListener("click", function () {
+        checkAnswer(chosenAnswer)});
+    }
+
 
 function checkAnswer(chosenAnswer) {
     console.log(chosenAnswer);
@@ -104,11 +107,12 @@ function checkAnswer(chosenAnswer) {
 
 // appends the div with a form to initial and save your score
 function saveScore(event) {
-    document.getElementById("submit").appendChild(f);
-    f.appendChild(i);
+    // replace "inputEl" with a separate input from the global
+    f.appendChild(inputEl);
     // i.onclick = i.select();
     f.appendChild(s);
-    localStorage.setItem("initials", i.value);
+    document.getElementById("submit").appendChild(f);
+    localStorage.setItem("initials", inputEl.value);
     event.preventDefault();
 }
 
