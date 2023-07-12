@@ -170,6 +170,6 @@ init();
 document.getElementById("quiz").addEventListener("click", startQuiz);
 document.getElementById("saveScore").addEventListener("click", function () {
   var initialsInput = document.getElementById("initials");
-  localStorage.setItem("initials", winCount + " - " + initialsInput.value);
+  localStorage.setItem("initials", "Correct: " + winCount + " - Incorrect: " +lossCount + " - " + initialsInput.value);
   showScore();
 });
