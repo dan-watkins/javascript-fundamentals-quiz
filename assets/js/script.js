@@ -1,9 +1,7 @@
 var scoreEl = document.querySelector(".scores");
 var timeEl = document.querySelector(".timer");
 var questionEl = document.querySelector("#questions");
-var question1 = document.createElement("p");
-var answerList = document.createElement("ul");
-var answers = document.createElement("li");
+var submitEl = document.querySelector("#submit");
 var questions = [
     {
         question: "what is the answer to question 1?",
@@ -33,28 +31,14 @@ var timeLeft = 10;
 var timerInterval;
 var winCount = 0;
 var lossCount = 0;
+// sets the initial display value for submitting your initals to "none" so you can't submit early
+var el = document.getElementById("submit");
+el.style.display = "none";
 
-// The below variables generate the form that is created for the submission of the score
-var f = document.createElement("form");
-f.setAttribute("method", "post");
-f.setAttribute("action", "submit");
-var inputEl = document.createElement("input");
-inputEl.setAttribute('type',"text");
-inputEl.setAttribute('name',"initials");
-var s = document.createElement("button"); 
-s.setAttribute('type',"submit");
-s.textContent = "Submit";
-
-// This timer is passed down to the "Start Quiz" button and decrements time by 1 second
-var countdown = function() {
-    timeLeft--;
-    timeEl.textContent = timeLeft;
-    if(timeLeft <= 0) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        alert("Time's up!");
-        saveScore(event);
-    }
+// Click event on "Start Quiz!" button triggers the beginning of the test
+function startQuiz(event) {
+    setTime();
+    showQuestions(event);
 }
 
 function setTime () {
@@ -67,7 +51,19 @@ function setTime () {
     timeEl.textContent = timeLeft;
 }
 
-// updated show questions function to grab a random question and choices, then build a radio button for each possible choice
+// Countdown keeps checking the timeLeft, and once it hits 0 alerts "Time's up!" and calls saveScore function
+var countdown = function() {
+    timeLeft--;
+    timeEl.textContent = timeLeft;
+    if(timeLeft <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        alert("Time's up!");
+        saveScore();
+    }
+}
+
+// Grabs a random question and choices, then build a radio button for each possible choice
 function showQuestions(event) {
 // potentially replace with while loop
     for (var i = 0; i < questions.length; i++) {
@@ -113,41 +109,23 @@ function checkAnswer(chosenAnswer) {
     showQuestions();
 }
 
-// appends the div with a form to initial and save your score
+// changes the submit div to display so that it shows only after the countdown function is finished.
 function saveScore() {
-    // replace "inputEl" with a separate input from the global
-    var textBox = document.createElement("input")
-    f.appendChild(textBox);
-    // i.onclick = i.select();
-    f.appendChild(s);
-    document.getElementById("submit").appendChild(f);
-    localStorage.setItem("initials", textBox.value);
-    event.preventDefault();
+    el.style.display = "block";
+    localStorage.setItem("initials", init.value + " - " + winCount);
+    showScore();
 }
 
-function startQuiz(event) {
-    setTime();
-    showQuestions(event);
+// once scores are saved updates the "view high scores" section with the saved input value and score
+function showScore() {
+    var score = document.createElement("p");
+    scoreEl.appendChild(score);
+    score.textContent = localStorage.getItem("initials", init.value + " - " + winCount);
 }
-
-// GIVEN I am taking a code quiz
-// WHEN I click the start button
-// THEN a timer starts and I am presented with a question
-
-// WHEN I answer a question
-// THEN I am presented with another question
-
-// WHEN I answer a question incorrectly
-// THEN time is subtracted from the clock
 
 // WHEN all questions are answered or the timer reaches 0
 // THEN the game is over
 
-// WHEN the game is over
-// THEN I can save my initials and my score
-
+// first listener is what starts the quiz, as soon as the "Start Quiz!" button is pressed.
 document.getElementById("quiz").addEventListener("click", startQuiz);
-document.getElementById("submit").addEventListener("click", function(event){
-    saveScore(event);
-});
 document.getElementById("questions").addEventListener("onsubmit", checkAnswer);
