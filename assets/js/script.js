@@ -24,20 +24,22 @@ var questions = [
         answer: "P"
     }
 ]
-
-var answeredQuestions = [];
+var currentQuestions;
 var chosenAnswer = "";
 var timeLeft = 10;
 var timerInterval;
 var winCount = 0;
 var lossCount = 0;
-// sets the initial display value for submitting your initals to "none" so you can't submit early
+// sets the initial display value for submitting your initials to "none" so you can't submit early
 var el = document.getElementById("submit");
 el.style.display = "none";
 
+
 // Click event on "Start Quiz!" button triggers the beginning of the test
 function startQuiz(event) {
-    setTime();
+  // ...is cloning the array "questions"
+  currentQuestions = [...questions];
+  setTime();
     showQuestions(event);
 }
 
@@ -59,15 +61,15 @@ var countdown = function() {
         clearInterval(timerInterval);
         timerInterval = null;
         alert("Time's up!");
-        saveScore();
+        showForm();
     }
 }
 
 // Grabs a random question and choices, then build a radio button for each possible choice
 function showQuestions(event) {
 // potentially replace with while loop
-    for (var i = 0; i < questions.length; i++) {
-        chosenQuestion = questions[Math.floor(Math.random() * questions.length)];
+    for (var i = 0; i < currentQuestions.length; i++) {
+        chosenQuestion = questions[Math.floor(Math.random() * currentQuestions.length)];
         document.getElementById("questions").innerHTML = "<p>" + chosenQuestion.question + "</p>";
         var options = chosenQuestion.choices;
         questionEl.appendChild(document.createElement("br"));
@@ -96,36 +98,49 @@ function showQuestions(event) {
         checkAnswer(chosenAnswer, chosenQuestion)});
     }
 
-// checks user anaswer against expected answer, increases score of true and subtracts time if false. then re-calls for next question.
-function checkAnswer(chosenAnswer) {
+// checks user answer against expected answer, increases score of true and subtracts time if false. then re-calls for next question.
+function checkAnswer(chosenAnswer, chosenQuestion) {
     if (chosenAnswer == chosenQuestion.answer) {
-        console.log("correct");
         winCount++;
     } else {
-        console.log("incorrect");
         timeLeft--;
         lossCount++;
     }
-    showQuestions();
+    currentQuestions.splice(chosenQuestion, 1);
+    if (currentQuestions.length > 0) {
+        showQuestions();
+    } else {
+        timeLeft = 0;
+    }
 }
 
 // changes the submit div to display so that it shows only after the countdown function is finished.
-function saveScore() {
+function showForm() {
     el.style.display = "block";
-    localStorage.setItem("initials", init.value + " - " + winCount);
-    showScore();
 }
 
 // once scores are saved updates the "view high scores" section with the saved input value and score
 function showScore() {
     var score = document.createElement("p");
     scoreEl.appendChild(score);
-    score.textContent = localStorage.getItem("initials", init.value + " - " + winCount);
+    score.textContent = localStorage.getItem("initials");
 }
+
+function init() {
+  if (localStorage.getItem("initials")) {
+    showScore();
+  }
+};
+
+init();
 
 // WHEN all questions are answered or the timer reaches 0
 // THEN the game is over
 
 // first listener is what starts the quiz, as soon as the "Start Quiz!" button is pressed.
 document.getElementById("quiz").addEventListener("click", startQuiz);
-document.getElementById("questions").addEventListener("onsubmit", checkAnswer);
+document.getElementById("saveScore").addEventListener("click", function () {
+  var initialsInput = document.getElementById("initials");
+  localStorage.setItem("initials", initialsInput.value + " - " + winCount);
+  showScore();
+});
